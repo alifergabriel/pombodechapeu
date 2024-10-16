@@ -14,7 +14,7 @@
                    x:Name="Bigas"
                      HeightRequest="50"
                      WidthRequest="50"
-                     HorizontalOptions="Start"/>
+                     HorizontalOptions="Start"/>                           
 
             <Image Source="canoalto.png"
                    x:Name="CanoCima"
@@ -28,10 +28,12 @@
                      HorizontalOptions="End"
                      HeightRequest="350"/>
 
-                <Image Source="ai.png"
+                <Image Source="ai.jpg"
                        x:Name="Aai"
                      VerticalOptions="End"
-                     HorizontalOptions="Fill"/>
+                     HorizontalOptions="Fill"
+                     Aspect="Fill"
+                     HeightRequest="50"/>
 
             <Frame x:Name="FrameGameOver"
                    BackgroundColor="#99000000"
