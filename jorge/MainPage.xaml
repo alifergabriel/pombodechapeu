@@ -6,6 +6,9 @@
 
    
         <Grid>
+              <Grid.GestureRecognizers>
+                     <TapGestureRecognizer Tapped="OnGridClicked"/>
+              </Grid.GestureRecognizers>
             <Image Source="shereka.png"
                    x:Name="Shereka"
                    Aspect="Fill"/>
@@ -14,7 +17,7 @@
                    x:Name="Bigas"
                      HeightRequest="50"
                      WidthRequest="50"
-                     HorizontalOptions="Start"/>                           
+                     HorizontalOptions="Start"/>
 
             <Image Source="canoalto.png"
                    x:Name="CanoCima"

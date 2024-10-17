@@ -2,15 +2,17 @@
 
 public partial class MainPage : ContentPage
 {
-	double larguraJanela = 0;
-
-	double alturaJanela = 0;
-
-	int velocidade = 20;
-
-	const int Gravidade = 1;
+	const int Gravidade = 5;
 	const int TempoEntreFrames = 25;
-	bool EstaMorto = false;
+	const int forcaPulo = 30;
+	const int maxTempoPulando = 3;
+	const int aberturaMinima = 100;
+	int velocidade = 20;
+	int tempoPulando = 0;
+	double larguraJanela = 0;
+	double alturaJanela = 0;
+	bool EstaMorto = true;
+	bool estaPulando = false;
 
 	public MainPage()
 	{
@@ -20,32 +22,72 @@ public partial class MainPage : ContentPage
 	{
 	  Bigas.TranslationY +=Gravidade;
 	}
-	protected override void OnAppearing()
-	{
-		base.OnAppearing();
-		Desenha();
-	}
 
-	public async void Desenha()
+	async void Desenha()
 	{
 		while (!EstaMorto)
 		{
-			GerenciaCanos();
-			AplicaGravidade();
+			GerenciarCanos();
+			if (estaPulando)
+				AplicaPulo();
+			else
+				AplicaGravidade();
+			if (VericaColizao())
+			{
+				EstaMorto = true;
+				FrameGameOver.IsVisible = true;
+				break;
+			}
 			await Task.Delay(TempoEntreFrames);
 		}
 	}
-	void Ui (object s, TappedEventArgs e)
+
+	bool VerificaColizaoTeto()
+	{
+		var minY = -alturaJanela / 2;
+
+		if (Bigas.TranslationY <= minY)
+			return true;
+		else
+			return false;
+	}
+
+	bool VerificaColizaoChao()
+	{
+		var maxY = alturaJanela / 2 - Aai.HeightRequest - 30;
+
+		if (Bigas.TranslationY >= maxY)
+			return true;
+		else
+			return false;
+	}
+
+	bool VericaColizao()
+	{
+		if (!EstaMorto)
+		{
+			if (VerificaColizaoTeto() || VerificaColizaoChao())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	void OnGameOverClicked (object s, TappedEventArgs e)
 	{
 		FrameGameOver.IsVisible = false;
-		EstaMorto = false;
 		Inicializar();
 		Desenha();
 	}
 
 	void Inicializar()
 	{
+		EstaMorto = false;
 		Bigas.TranslationY = 0;
+		CanoBaixo.TranslationX = 0;
+		CanoCima.TranslationX = 0;
 	}
 
     protected override void OnSizeAllocated(double width, double height)
@@ -55,19 +97,37 @@ public partial class MainPage : ContentPage
 		alturaJanela = height;
     }
 
-    void GerenciaCanos(){
+    void GerenciarCanos()
+	{
 		CanoCima.TranslationX -= velocidade;
 		CanoBaixo.TranslationX -= velocidade;
-		if(CanoBaixo.TranslationX < -larguraJanela){
-			CanoBaixo.TranslationX = 0;
-			CanoCima.TranslationX = 0;
+		if (CanoBaixo.TranslationX < -larguraJanela)
+		{
+			CanoBaixo.TranslationX = 20;
+			CanoCima.TranslationX = 20;
+		
+			var alturaMaxima = -100;
+			var alturaMinima = -CanoBaixo.HeightRequest;
+
+			CanoCima.TranslationY = Random.Shared.Next((int)alturaMinima, (int)alturaMaxima);
+			CanoBaixo.TranslationY = CanoCima.TranslationY + aberturaMinima + CanoBaixo.HeightRequest;
 		}
 	}
 
-	void OnGameOverClicked(object s, TappedEventArgs e)
+	void AplicaPulo()
 	{
-		FrameGameOver.IsVisible = false;
-		Inicializar();
-		Desenha();
+		Bigas.TranslationY -= forcaPulo;
+		tempoPulando++;
+
+		if (tempoPulando >= maxTempoPulando)
+		{
+			estaPulando = false;
+			tempoPulando = 0;
+		}
+	}
+
+	void OnGridClicked(object s, TappedEventArgs args)
+	{
+		estaPulando = true;
 	}
 }
