@@ -66,7 +66,7 @@ public partial class MainPage : ContentPage
 	{
 		if (!EstaMorto)
 		{
-			if (VerificaColizaoTeto() || VerificaColizaoChao())
+			if (VerificaColizaoTeto() || VerificaColizaoChao() || VerificaColizaoCanoCima())
 			{
 				return true;
 			}
@@ -88,6 +88,12 @@ public partial class MainPage : ContentPage
 		Bigas.TranslationY = 0;
 		CanoBaixo.TranslationX = 0;
 		CanoCima.TranslationX = 0;
+		CanoCima.TranslationX =- larguraJanela;
+		CanoBaixo.TranslationX =- larguraJanela;
+		Bigas.TranslationX = 0;
+		Bigas.TranslationY = 0;
+		score = 0;
+		GerenciarCanos();
 	}
 
     protected override void OnSizeAllocated(double width, double height)
@@ -130,4 +136,20 @@ public partial class MainPage : ContentPage
 	{
 		estaPulando = true;
 	}
+	VerificaColizaoCanoCima()
+	{
+      var posHUrubu = (larguraJanela/2)-(Bigas.WidthRequest/2);
+	  var posVUrubu = (larguraJanela/2)-(Bigas.HeightRequest/2)+Bigas.TranslationY;
+	  if (posHUrubu >=Math.Abs(CanoCima.TranslationX-CanoCima.WidthRequest)&&
+	  posHUrubu <=Math.Abs(CanoCima.TranslationX+CanoCima.WidthRequest)&&
+	  posVUrubu <=CanoCima.HeightRequest+CanoCima.TranslationY)
+	  {
+		return true;
+	  }
+	  else
+	  {
+		return false;
+	  }
+	}
+
 }

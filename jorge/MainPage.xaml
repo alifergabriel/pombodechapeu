@@ -23,13 +23,13 @@
                    x:Name="CanoCima"
                      VerticalOptions="Start"
                      HorizontalOptions="End"
-                     HeightRequest="350"/>
+                     HeightRequest="650"/>
 
                 <Image Source="canobaixo.png"
                        x:Name="CanoBaixo"
                      VerticalOptions="End"
                      HorizontalOptions="End"
-                     HeightRequest="350"/>
+                     HeightRequest="650"/>
 
                 <Image Source="ai.jpg"
                        x:Name="Aai"
