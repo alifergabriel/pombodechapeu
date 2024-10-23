@@ -13,6 +13,7 @@ public partial class MainPage : ContentPage
 	double alturaJanela = 0;
 	bool EstaMorto = true;
 	bool estaPulando = false;
+	int score = 0;
 
 	public MainPage()
 	{
@@ -66,7 +67,7 @@ public partial class MainPage : ContentPage
 	{
 		if (!EstaMorto)
 		{
-			if (VerificaColizaoTeto() || VerificaColizaoChao() || VerificaColizaoCanoCima())
+			if (VerificaColizaoTeto() || VerificaColizaoChao() || VerificaColizaoCanoCima() || VerificaColisaoCanoBaixo())
 			{
 				return true;
 			}
@@ -92,6 +93,7 @@ public partial class MainPage : ContentPage
 		CanoBaixo.TranslationX =- larguraJanela;
 		Bigas.TranslationX = 0;
 		Bigas.TranslationY = 0;
+		score = 0;
 		GerenciarCanos();
 	}
 
@@ -116,6 +118,9 @@ public partial class MainPage : ContentPage
 
 			CanoCima.TranslationY = Random.Shared.Next((int)alturaMinima, (int)alturaMaxima);
 			CanoBaixo.TranslationY = CanoCima.TranslationY + aberturaMinima + CanoBaixo.HeightRequest;
+
+			score++;
+			LabelScore.Text = "Canos:" + score.ToString("D3");
 		}
 	}
 
@@ -149,6 +154,19 @@ public partial class MainPage : ContentPage
 	  {
 		return false;
 	  }
+	}
+
+	bool VerificaColisaoCanoBaixo()
+	{
+		var posicaoHPardal = (larguraJanela / 2) - (Bigas.WidthRequest / 2);
+		var posicaoVPardal = (alturaJanela / 2) - (Bigas.HeightRequest / 2) + Bigas.TranslationY;
+
+		if (posicaoHPardal >= Math.Abs(CanoBaixo.TranslationX) + CanoBaixo.WidthRequest && 
+		posicaoHPardal <= Math.Abs(CanoBaixo.TranslationX) + CanoBaixo.WidthRequest && 
+		posicaoVPardal <= CanoBaixo.HeightRequest + CanoBaixo.TranslationY)
+			return true;
+		else
+			return false;
 	}
 
 }

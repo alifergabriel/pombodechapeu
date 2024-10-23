@@ -16,20 +16,33 @@
             <Image Source="bigas.png"
                    x:Name="Bigas"
                      HeightRequest="50"
+                     BackgroundColor="Blue"
                      WidthRequest="50"
                      HorizontalOptions="Start"/>
 
             <Image Source="canoalto.png"
                    x:Name="CanoCima"
                      VerticalOptions="Start"
+                     
+                     BackgroundColor="Green"
                      HorizontalOptions="End"
                      HeightRequest="650"/>
 
                 <Image Source="canobaixo.png"
                        x:Name="CanoBaixo"
+                       
+                     BackgroundColor="Green"
                      VerticalOptions="End"
                      HorizontalOptions="End"
                      HeightRequest="650"/>
+
+                     <Frame HorizontalOptions="End"
+                     VerticalOptions="Start"
+                     Margin="0,10,10,0"
+                     BackgroundColor="Grey">
+              <Label x:Name="LabelScore"/>
+              
+              </Frame>
 
                 <Image Source="ai.jpg"
                        x:Name="Aai"
