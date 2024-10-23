@@ -92,7 +92,6 @@ public partial class MainPage : ContentPage
 		CanoBaixo.TranslationX =- larguraJanela;
 		Bigas.TranslationX = 0;
 		Bigas.TranslationY = 0;
-		score = 0;
 		GerenciarCanos();
 	}
 
@@ -136,13 +135,13 @@ public partial class MainPage : ContentPage
 	{
 		estaPulando = true;
 	}
-	VerificaColizaoCanoCima()
+	bool VerificaColizaoCanoCima()
 	{
-      var posHUrubu = (larguraJanela/2)-(Bigas.WidthRequest/2);
-	  var posVUrubu = (larguraJanela/2)-(Bigas.HeightRequest/2)+Bigas.TranslationY;
-	  if (posHUrubu >=Math.Abs(CanoCima.TranslationX-CanoCima.WidthRequest)&&
-	  posHUrubu <=Math.Abs(CanoCima.TranslationX+CanoCima.WidthRequest)&&
-	  posVUrubu <=CanoCima.HeightRequest+CanoCima.TranslationY)
+      var posHBigas = (larguraJanela/2)-(Bigas.WidthRequest/2);
+	  var posVBigas = (larguraJanela/2)-(Bigas.HeightRequest/2)+Bigas.TranslationY;
+	  if (posHBigas >=Math.Abs(CanoCima.TranslationX-CanoCima.WidthRequest)&&
+	  posHBigas <=Math.Abs(CanoCima.TranslationX+CanoCima.WidthRequest)&&
+	  posVBigas <=CanoCima.HeightRequest+CanoCima.TranslationY)
 	  {
 		return true;
 	  }
