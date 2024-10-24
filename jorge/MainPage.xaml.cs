@@ -65,16 +65,8 @@ public partial class MainPage : ContentPage
 
 	bool VericaColizao()
 	{
-		if (!EstaMorto)
-		{
-			if (VerificaColizaoTeto() || VerificaColizaoChao() || VerificaColizaoCanoCima() || VerificaColisaoCanoBaixo())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+    return (!EstaMorto && (VerificaColizaoChao() || VerificaColizaoTeto() || VerificaColizaoCanoCima()));
+  }
 
 	void OnGameOverClicked (object s, TappedEventArgs e)
 	{
@@ -102,6 +94,11 @@ public partial class MainPage : ContentPage
         base.OnSizeAllocated(width, height);
 		larguraJanela = width;
 		alturaJanela = height;
+		if (height > 0)
+    {
+      CanoCima.HeightRequest  = height - Aai.HeightRequest;
+      CanoBaixo.HeightRequest = height - Aai.HeightRequest;
+    }
     }
 
     void GerenciarCanos()
@@ -110,18 +107,19 @@ public partial class MainPage : ContentPage
 		CanoBaixo.TranslationX -= velocidade;
 		if (CanoBaixo.TranslationX < -larguraJanela)
 		{
-			CanoBaixo.TranslationX = 20;
-			CanoCima.TranslationX = 20;
+			CanoBaixo.TranslationX = 0;
+			CanoCima.TranslationX = 0;
 		
-			var alturaMaxima = -100;
-			var alturaMinima = -CanoBaixo.HeightRequest;
+			var alturaMaxima = -(CanoBaixo.HeightRequest * 0.1);
+      var alturaMinima = -(CanoBaixo.HeightRequest * 0.8);
 
-			CanoCima.TranslationY = Random.Shared.Next((int)alturaMinima, (int)alturaMaxima);
-			CanoBaixo.TranslationY = CanoCima.TranslationY + aberturaMinima + CanoBaixo.HeightRequest;
+      CanoCima.TranslationY  = Random.Shared.Next((int)alturaMinima, (int)alturaMaxima);
+      CanoBaixo.TranslationY = CanoCima.HeightRequest + CanoCima.TranslationY + aberturaMinima;
 
-			score++;
-			LabelScore.Text = "Canos:" + score.ToString("D3");
-		}
+      score++;
+      LabelScore.Text = "Score: " + score.ToString("D5");
+      if (score % 4 == 0)
+        velocidade++;
 	}
 
 	void AplicaPulo()
@@ -142,31 +140,33 @@ public partial class MainPage : ContentPage
 	}
 	bool VerificaColizaoCanoCima()
 	{
-      var posHBigas = (larguraJanela/2)-(Bigas.WidthRequest/2);
-	  var posVBigas = (larguraJanela/2)-(Bigas.HeightRequest/2)+Bigas.TranslationY;
-	  if (posHBigas >=Math.Abs(CanoCima.TranslationX-CanoCima.WidthRequest)&&
-	  posHBigas <=Math.Abs(CanoCima.TranslationX+CanoCima.WidthRequest)&&
-	  posVBigas <=CanoCima.HeightRequest+CanoCima.TranslationY)
-	  {
-		return true;
-	  }
-	  else
-	  {
-		return false;
-	  }
-	}
+    var posicaoHorizontalPardal = (larguraJanela - 50) - (Bigas.WidthRequest / 2);
+    var posicaoVerticalPardal   = (alturaJanela / 2) - (Bigas.HeightRequest / 2) + Bigas.TranslationY;
 
-	bool VerificaColisaoCanoBaixo()
-	{
-		var posicaoHPardal = (larguraJanela / 2) - (Bigas.WidthRequest / 2);
-		var posicaoVPardal = (alturaJanela / 2) - (Bigas.HeightRequest / 2) + Bigas.TranslationY;
+    if (
+         posicaoHorizontalPardal >= Math.Abs(CanoCima.TranslationX) - CanoCima.WidthRequest &&
+         posicaoHorizontalPardal <= Math.Abs(CanoCima.TranslationX) + CanoCima.WidthRequest &&
+         posicaoVerticalPardal   <= CanoCima.HeightRequest + CanoCima.TranslationY
+       )
+      return true;
+    else
+      return false;
+  }
+	bool VerificaColizaoCanoBaixo()
+  {
+    var posicaoHorizontalBigas = larguraJanela - 50 - Bigas.WidthRequest / 2;
+    var posicaoVerticalBigas   = (alturaJanela / 2) + (Bigas.HeightRequest / 2) + Bigas.TranslationY;
 
-		if (posicaoHPardal >= Math.Abs(CanoBaixo.TranslationX) + CanoBaixo.WidthRequest && 
-		posicaoHPardal <= Math.Abs(CanoBaixo.TranslationX) + CanoBaixo.WidthRequest && 
-		posicaoVPardal <= CanoBaixo.HeightRequest + CanoBaixo.TranslationY)
-			return true;
-		else
-			return false;
-	}
+    var yMaxCano = CanoCima.HeightRequest + CanoCima.TranslationY + aberturaMinima;
 
+    if (
+         posicaoHorizontalBigas >= Math.Abs(CanoCima.TranslationX) - CanoCima.WidthRequest &&
+         posicaoHorizontalBigas <= Math.Abs(CanoCima.TranslationX) + CanoCima.WidthRequest &&
+         posicaoVerticalBigas   >= yMaxCano
+       )
+      return true;
+    else
+      return false;
+  }
+}
 }
