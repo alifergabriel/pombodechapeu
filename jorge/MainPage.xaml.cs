@@ -36,6 +36,7 @@ public partial class MainPage : ContentPage
 			if (VericaColizao())
 			{
 				EstaMorto = true;
+				SoundHelper.Play("morte.wav");
 				FrameGameOver.IsVisible = true;
 				break;
 			}
@@ -52,7 +53,9 @@ public partial class MainPage : ContentPage
 	{
 		FrameGameOver.IsVisible = false;
 		Inicializar();
+		SoundHelper.Play("começodojogo.wav");
 		Desenha();
+		 SoundHelper.Play("musicadefundo.wav");
 	}
 
 	void Inicializar()
@@ -91,6 +94,7 @@ public partial class MainPage : ContentPage
       CanoBaixo.TranslationY = CanoCima.HeightRequest + CanoCima.TranslationY + aberturaMinima;
 
       pontuacao++;
+	   SoundHelper.Play("pasarcanos.wav");
       labelPontuacao.Text = "Pontuação: " + pontuacao.ToString("D5");
       if (pontuacao % 4 == 0)
         Velocidade++;
